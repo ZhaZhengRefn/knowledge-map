@@ -8,7 +8,7 @@
 
 ### 单向链表
 
-#### 规范
+1. 规范
 此处为leetcode中explore的链表章节的实现，其规范为:
 > Design your implementation of the linked list. You can choose to use the singly linked list or the doubly linked list. A node in a singly linked list should have two attributes: val and next. val is the value of the current node, and next is a pointer/reference to the next node. If you want to use the doubly linked list, you will need one more attribute prev to indicate the previous node in the linked list. Assume all nodes in the linked list are 0-indexed.
 
@@ -20,7 +20,7 @@
 - addAtIndex(index, val) : Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted.
 - deleteAtIndex(index) : Delete the index-th node in the linked list, if the index is valid.
 
-#### 链表节点
+2. 链表节点
 ```js
 class LinkedNode {
   constructor(val, next = null) {
@@ -32,7 +32,7 @@ class LinkedNode {
   }
 }
 ```
-#### 链表
+3. 链表
 ```js
 class LinkedList {
   constructor() {
@@ -141,10 +141,10 @@ class LinkedList {
 ## 若干问题
 > 以下问题均来自与[leetcode.com](https://leetcode.com/explore/learn/card/linked-list/)
 
-### 判断链表是否有环
+1. 判断链表是否有环
 > Given a linked list, determine if it has a cycle in it.
 
-#### 快慢指针法
+*快慢指针法*
 想象有环的链表如一个跑道，若两个人同时起步跑，一人快一人慢，快跑的人则迟早会追上慢跑的人。按照这个原理，使用双指针遍历可以有效地判断出链表是否有环。
 > If there is no cycle, the fast pointer will stop at the end of the linked list.
 > If there is a cycle, the fast pointer will eventually meet with the slow pointer.
@@ -171,7 +171,7 @@ function hasCycle(head) {
 }
 ```
 
-### 找出环入口
+2. 找出环入口
 > Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
 
 结合上一步的快慢指针法。假设已经找到快慢指针在环中重合的节点，那么将快指针步长与慢指针步长均设置为*1*。然后将慢指针指向head，从head开始跑。此时快慢指针均按统一的速度遍历，假如遇到环的入口，二者必将重合。
@@ -201,5 +201,52 @@ function detectCycle(head) {
     slow = slow.next
   }
   return fast
+}
+```
+
+3. 寻找链表节点
+
+两链表有交点，则将第二个链表接在第一个链表尾部，必然会形成一个环。环的入口就是交点
+
+实现
+```js
+const detectCycle = require('./detect-cycle')
+
+function getIntersectionNode(headA, headB) {
+  if (!headA || !headB) return null
+
+  let tailA = headA
+  while (tailA && tailA.next) {
+    tailA = tailA.next
+  }
+  tailA.next = headB
+
+  // 从headA开始寻找环入口
+  return detectCycle(headA)
+}
+```
+
+4. 删除倒数第k个节点
+设置双指针，第二个指针先走k步。以同样的步长循环链表，到后者指针到达链表尾节点，则前者即是所求
+
+```js
+function removeNode(head, n) {
+  let first = head
+  let second = head
+  let count = 0
+
+  while (count < n) {
+    second = second.next
+    count ++
+  }
+  
+  while (second.next) {
+    first = first.next
+    second = second.next
+  }
+
+  let temp = first.next
+  first.next = first.next.next
+  temp.next = null
 }
 ```
