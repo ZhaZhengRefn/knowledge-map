@@ -176,6 +176,8 @@ function hasCycle(head) {
 
 结合上一步的快慢指针法。假设已经找到快慢指针在环中重合的节点，那么将快指针步长与慢指针步长均设置为*1*。然后将慢指针指向head，从head开始跑。此时快慢指针均按统一的速度遍历，假如遇到环的入口，二者必将重合。
 
+[canvas示意图](https://codepen.io/huiwang/pen/RjLORZ)
+
 实现: 
 ```js
 function detectCycle(head) {
