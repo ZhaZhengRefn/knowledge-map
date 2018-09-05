@@ -250,3 +250,22 @@ function removeNode(head, n) {
   temp.next = null
 }
 ```
+
+5. 反转单链表
+核心是循环链表，将节点的next指向前一个节点
+
+```js
+function reverseList(head) {
+  let prev = null
+  let current = head
+
+  while (current !== null) {
+    let temp = current.next//缓存下一个节点
+    current.next = prev//next指针指向上一个节点
+    prev = current//更新上一个节点为当前节点，待下个循环读取
+    current = temp//待下一个循环读取
+  }
+
+  return prev
+}
+```
