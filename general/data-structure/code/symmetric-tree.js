@@ -20,7 +20,7 @@ const isMirrorWithRecursive = function(r1, r2) {
 const isMirrorIteratively = function(r1, r2) {
   const stack1 = [r1], stack2 = [r2]
   while (stack1.length > 0 || stack2.length > 0) {
-    const cur1 = stack1.pop(), cur2 = stack2.pop()
+    const cur1 = stack1.pop(), cur2 = stack2.pop()//TODO:shift？深度优先与广度优先
 
     if (cur1 === null && cur2 === null) continue
 
