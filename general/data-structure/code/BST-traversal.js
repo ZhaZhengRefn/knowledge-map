@@ -1,7 +1,7 @@
 /**
  * 前缀遍历
  */
-const preorderTraversal = function(root) {
+const preorderTraversal = function (root) {
   let traverse = []
 
   traverse.push(root.value)
@@ -20,7 +20,7 @@ const preorderTraversal = function(root) {
 /**
  * 中缀遍历
  */
-const inorderTraversal = function(root) {
+const inorderTraversal = function (root) {
   let traverse = []
 
   if (root.left) {
@@ -33,13 +33,13 @@ const inorderTraversal = function(root) {
     traverse = traverse.concat(preorderTraversal(root.right))
   }
 
-  return traverse  
+  return traverse
 }
 
 /**
  * 后缀遍历
  */
-const postorderTraversal = function(root) {
+const postorderTraversal = function (root) {
   let traverse = []
 
   if (root.left) {
@@ -52,13 +52,56 @@ const postorderTraversal = function(root) {
 
   traverse.push(root.value)
 
-  return traverse  
+  return traverse
+}
+
+/**
+ * 层次遍历：自顶向下
+ * notice: 使用队列实现
+ */
+const levelOrderTraversal = function (root) {
+  const wrap = []
+  search(root, 1)
+
+  function search(root, level) {
+    if (!root) return
+    if (wrap.length < level) {
+      wrap.push([])
+    }
+    const cur = wrap[level - 1]
+    cur.push(root.value)
+    search(root.left, level + 1)
+    search(root.right, level + 1)
+  }
+  return wrap
+}
+/**
+ * 层次遍历：自底向上
+ */
+const levelOrderFromBottom = function(root) {
+  const wrap = []
+  search(root, 1)
+
+  function search(root, level) {
+    if (!root) return 
+    if (wrap.length < level) {
+      wrap.unshift([])
+    }
+    const cur = wrap[wrap.length - level]
+    cur.push(root.value)
+
+    search(root.left, level + 1)
+    search(root.right, level + 1)
+  }
+  return wrap
 }
 
 module.exports = exports = {
   preorderTraversal,
   inorderTraversal,
   postorderTraversal,
+  levelOrderTraversal,
+  levelOrderFromBottom,
 }
 
 /**
