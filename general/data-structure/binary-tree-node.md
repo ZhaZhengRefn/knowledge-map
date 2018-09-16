@@ -246,3 +246,27 @@ const buildTreeWithPreorder = function(inorder, preorder) {
   return root  
 }
 ```
+
+6. 生成所有节点的右向节点
+题目要求: [leetcode](https://leetcode-cn.com/explore/learn/card/data-structure-binary-tree/4/conclusion/17/)
+实现：遍历每一层节点，以左子树节点为链表头，生产每个节点的右向指针
+```js
+const nextRight = function(root) {
+  let start = root
+  while (start != null) {
+    let cur = start
+    if (start.next == null) start.next = null
+    while (cur != null) {
+      if (cur.left != null) {
+        cur.left.next = cur.right
+      }
+      if (cur.right != null) {
+        cur.right.next = cur.next != null ? cur.next.left : null
+      }
+      cur = cur.next
+    }
+    start = start.left
+  }
+  return root
+}
+```
