@@ -23,8 +23,32 @@ const buildTreeWithPostorder = function(inorder, postorder) {
   return root
 }
 
+const buildTreeWithPreorder = function(inorder, preorder) {
+  if (!inorder.length || !preorder.length) return []
+
+  const rootValue = preorder[0]
+  const root = new Node(rootValue)
+  debugger
+  const index = inorder.indexOf(rootValue)
+  
+  const leftInorder = inorder.slice(0, index)
+  const rightInorder = inorder.slice(index + 1)
+
+  const leftPreorder = preorder.slice(1, leftInorder.length + 1)
+  const rightPreorder = preorder.slice(leftInorder.length + 1, preorder.length)
+
+  root.left = leftInorder.length === 0 
+    ? null 
+    : buildTreeWithPreorder(leftInorder, leftPreorder)
+  root.right = rightInorder.length === 0 
+    ? null 
+    : buildTreeWithPreorder(rightInorder, rightPreorder)
+  return root  
+}
+
 module.exports = {
   buildTreeWithPostorder,
+  buildTreeWithPreorder,
 }
 
 /**
@@ -37,6 +61,9 @@ module.exports = {
 // root.insert(12)
 // root.insert(14)
 
-// const newTree = buildTreeWithPostorder([ 10, 11, 12, 13, 14 ],[ 10, 12, 11, 14, 13 ])
-// console.log(levelOrderTraversal(newTree))
-// console.log(inorderTraversal(newTree));
+// const newPostTree = buildTreeWithPostorder([ 10, 11, 12, 13, 14 ],[ 10, 12, 11, 14, 13 ])
+// const newPreTree = buildTreeWithPreorder([ 10, 11, 12, 13, 14 ],[ 13, 11, 10, 12, 14 ])
+// console.log(levelOrderTraversal(newPostTree))
+// console.log(levelOrderTraversal(newPreTree))
+// console.log(inorderTraversal(newPostTree));
+// console.log(inorderTraversal(newPreTree));
