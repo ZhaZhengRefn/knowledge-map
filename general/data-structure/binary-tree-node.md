@@ -187,3 +187,35 @@ const pathSum = function(root, sum) {
   return pathSum(root.left, sum - root.value) || pathSum(root.right, sum - root.value)
 }
 ```
+
+4. 根据中序遍历、后序遍历构造二叉树
+> 根据一棵树的中序遍历与后序遍历构造二叉树。
+实现思路主要是找出根节点、左子树、右子树。
+- 根节点显然是后序遍历的最后一个节点。
+- 左子树所有节点、右子树所有节点，可以以根节点为临界点。显然为中序遍历的左半部分与右半部分。
+- 遍历至中序遍历数组长度为零为止
+实现:
+```js
+const buildTreeWithPostorder = function(inorder, postorder) {
+  if (!inorder.length || !postorder.length) return []
+
+  const rootValue = postorder.slice(-1)[0]
+  const root = new Node(rootValue)
+  
+  const index = inorder.indexOf(rootValue)
+  
+  const leftInorder = inorder.slice(0, index)
+  const rightInorder = inorder.slice(index + 1)
+
+  const leftPostorder = postorder.slice(0, leftInorder.length)
+  const rightPostorder = postorder.slice(leftInorder.length, postorder.length - 1)
+
+  root.left = leftInorder.length === 0 
+    ? null 
+    : buildTreeWithPostorder(leftInorder, leftPostorder)
+  root.right = rightInorder.length === 0 
+    ? null 
+    : buildTreeWithPostorder(rightInorder, rightPostorder)
+  return root
+}
+```
