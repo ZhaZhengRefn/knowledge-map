@@ -24,13 +24,13 @@ const inorderTraversal = function (root) {
   let traverse = []
 
   if (root.left) {
-    traverse = traverse.concat(preorderTraversal(root.left))
+    traverse = traverse.concat(inorderTraversal(root.left))
   }
 
   traverse.push(root.value)
 
   if (root.right) {
-    traverse = traverse.concat(preorderTraversal(root.right))
+    traverse = traverse.concat(inorderTraversal(root.right))
   }
 
   return traverse
@@ -43,11 +43,11 @@ const postorderTraversal = function (root) {
   let traverse = []
 
   if (root.left) {
-    traverse = traverse.concat(preorderTraversal(root.left))
+    traverse = traverse.concat(postorderTraversal(root.left))
   }
 
   if (root.right) {
-    traverse = traverse.concat(preorderTraversal(root.right))
+    traverse = traverse.concat(postorderTraversal(root.right))
   }
 
   traverse.push(root.value)
