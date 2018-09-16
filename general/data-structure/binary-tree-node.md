@@ -219,3 +219,30 @@ const buildTreeWithPostorder = function(inorder, postorder) {
   return root
 }
 ```
+
+5. 根据中序遍历、前序遍历构造二叉树
+实现原理同上，前序遍历第一个节点为根节点。
+```js
+const buildTreeWithPreorder = function(inorder, preorder) {
+  if (!inorder.length || !preorder.length) return []
+
+  const rootValue = preorder[0]
+  const root = new Node(rootValue)
+  debugger
+  const index = inorder.indexOf(rootValue)
+  
+  const leftInorder = inorder.slice(0, index)
+  const rightInorder = inorder.slice(index + 1)
+
+  const leftPreorder = preorder.slice(1, leftInorder.length + 1)
+  const rightPreorder = preorder.slice(leftInorder.length + 1, preorder.length)
+
+  root.left = leftInorder.length === 0 
+    ? null 
+    : buildTreeWithPreorder(leftInorder, leftPreorder)
+  root.right = rightInorder.length === 0 
+    ? null 
+    : buildTreeWithPreorder(rightInorder, rightPreorder)
+  return root  
+}
+```
