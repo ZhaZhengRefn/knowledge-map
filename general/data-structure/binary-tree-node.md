@@ -270,3 +270,31 @@ const nextRight = function(root) {
   return root
 }
 ```
+
+7. 二叉树的最近公共祖先
+题目要求: [leetcode](https://leetcode-cn.com/explore/learn/card/data-structure-binary-tree/4/conclusion/19/)
+> 假定节点均在树内
+实现思路：
+从根节点开始遍历所有节点。既然假定两个节点均在树内，那么寻找到节点时就可以结束遍历。
+- 假如有某个节点在左子树，另一个在右子树，那么该节点为最近公共祖先。
+- 假如两个节点均在左子树，那么最近公共祖先在左子树内。
+- 右子树同理。
+```js
+const LCA = function(root, p, q) {
+  if (root === null || root.value === p || root.value === q) {
+    return root
+  }
+  const left = LCA(root.left, p, q)
+  const right = LCA(root.right, p, q)
+  // 节点不在左子树，LCA必定在右子树
+  if (left === null) {
+    return right
+  }
+  // 节点不在右子树，LCA必定在左子树
+  if (right === null) {
+    return left
+  }
+  // 节点位于左右子树，root为LCA
+  return root
+}
+```
