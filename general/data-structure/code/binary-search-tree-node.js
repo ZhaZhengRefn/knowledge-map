@@ -32,6 +32,22 @@ class BinarySearchTreeNode extends BinaryTreeNode {
       return newNode
     }    
   }
+
+  find(value) {
+    if (this.nodeValueComparator.equal(value)) {
+      return this
+    }
+
+    if (this.nodeValueComparator.lessThan(value)) {
+      return this.left.find(value)
+    }
+
+    if (this.nodeValueComparator.greaterThan(value)) {
+      return this.right.find(value)
+    }
+
+    return null
+  }
 }
 
 module.exports = exports = BinarySearchTreeNode
