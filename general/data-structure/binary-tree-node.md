@@ -279,6 +279,7 @@ const nextRight = function(root) {
 - 假如有某个节点在左子树，另一个在右子树，那么该节点为最近公共祖先。
 - 假如两个节点均在左子树，那么最近公共祖先在左子树内。
 - 右子树同理。
+[思路解释](https://www.geeksforgeeks.org/lowest-common-ancestor-binary-tree-set-1/)
 ```js
 const LCA = function(root, p, q) {
   if (root === null || root.value === p || root.value === q) {
