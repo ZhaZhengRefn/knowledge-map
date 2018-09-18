@@ -1,10 +1,3 @@
-# 二叉搜索树
-
-# 二叉搜索树节点实现
-<!-- TODO -->
-
-# 验证二叉搜索树
-```js
 // 中序遍历过程中判断当前节点是否比上一个节点的值要大，否则无效
 const isValidBST = function(root) {
   const wrap = []
@@ -28,4 +21,5 @@ const isValidBST = function(root) {
   }
   return validate(root)
 }
-```
+
+module.exports = isValidBST
