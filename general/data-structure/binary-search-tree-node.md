@@ -4,6 +4,7 @@
 <!-- TODO -->
 
 # 验证二叉搜索树
+## 实现
 ```js
 // 中序遍历过程中判断当前节点是否比上一个节点的值要大，否则无效
 const isValidBST = function(root) {
@@ -36,6 +37,7 @@ const isValidBST = function(root) {
 > 调用 ```next()``` 将返回二叉搜索树中的下一个最小的数。
 
 > 注意: ```next()``` 和```hasNext()``` 操作的时间复杂度是O(1)，并使用 O(h) 内存，其中 h 是树的高度。
+## 实现
 ```js
 /**
  * 实现思路:
@@ -66,6 +68,7 @@ const iterator = function(root) {
 ```
 
 # 实现二叉搜索树的搜索节点功能
+## 实现
 给节点增加find方法
 ```js
 // ...
@@ -88,6 +91,7 @@ const iterator = function(root) {
 ```
 
 # 实现二叉搜索树的插入节点功能
+## 实现
 早就实现了
 ```js
 // ...
@@ -119,6 +123,7 @@ const iterator = function(root) {
 ```
 
 # 实现二叉搜索树的删除节点功能
+## 实现
 分三种情况：
 1. 要删除的节点为叶节点: 直接删除
 2. 要删除的节点具备一个子节点: 将子节点直接顶上，替换要删除的节点
@@ -160,4 +165,77 @@ const iterator = function(root) {
     }
     return node
   }
+```
+
+# 使用二叉搜索树储存数据流，寻找第k大元素
+>设计一个找到数据流中第K大元素的类（class）。注意是排序后的第K大元素，不是第K个不同的元素。
+
+>你的 KthLargest 类需要一个同时接收整数 k 和整数数组nums 的构造器，它包含数据流中的初始元素。每次调用 KthLargest.add，返回当前数据流中第K大的元素。
+
+## 示例
+```js
+int k = 3;
+int[] arr = [4,5,8,2];
+KthLargest kthLargest = new KthLargest(3, arr);
+kthLargest.add(3);   // returns 4
+kthLargest.add(5);   // returns 5
+kthLargest.add(10);  // returns 5
+kthLargest.add(9);   // returns 8
+kthLargest.add(4);   // returns 8
+```
+## 实现
+```js
+class Node {
+  constructor(val) {
+    this.count = 1
+    this.value = val
+    this.left = this.right = null
+  }
+}
+
+class KthLargest {
+  constructor(kth, nums) {
+    this.kth = kth
+    this.root = null
+    nums.forEach(num => {
+      this.root = this._add(this.root, num)
+    })
+  }
+
+  _add(root, val) {
+    if (!root) return new Node(val)
+    root.count++//count代表该节点下具有多少子节点
+    if (root.value > val) {
+      root.left = this._add(root.left, val)
+    } else {
+      root.right = this._add(root.right, val)
+    }
+    return root
+  }
+
+  _find() {
+    let walker = this.root
+    let count = this.kth
+    
+    if (!walker) return null
+
+    while (count > 0) {
+      // 寻找count为特定值的节点
+      const position = 1 + (walker.right ? walker.right.count : 0)
+      if (count === position) break
+      if (count > position) {
+        count -= position
+        walker = walker.left
+      } else {
+        walker = walker.right
+      }
+    }
+    return walker.value
+  }
+
+  add(val) {
+    this._add(this.root, val)
+    return this._find()
+  }
+}
 ```
