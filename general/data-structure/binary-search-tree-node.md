@@ -239,3 +239,19 @@ class KthLargest {
   }
 }
 ```
+
+# 二叉搜索树的最大公共祖先
+寻找二叉搜索树的最大公共祖先与普通树的区别在于，BST的节点插入是有顺序的，左子树节点必然小于右子树节点。
+```js
+const LCA = function(root, p, q) {
+  if (!root) return null
+
+  if (root.value < p && root.value < q) {
+    return LCA(root.right, p, q)
+  }
+  if (root.value > p && root.value > q) {
+    return LCA(root.left, p, q)
+  }
+  return root
+}
+```
