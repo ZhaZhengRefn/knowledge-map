@@ -336,3 +336,94 @@ module.exports = {
   }
 };
 ```
+
+## resolve
+
+### resolve.modules
+告诉webpack解析模块时的路径。参数为数组。
+有两个特性:
+- 传入路径:
+可以传入**绝对路径**与**相对路径**。
+相对路径的搜索方式与`node_modules`类似，会一层一层地往上搜索。如先搜索当前目录的`./node_modules`与祖先目录的`../node_modules`。
+- 存在优先级:
+`modules: [path.resolve(__dirname, "src"), "node_modules"]`
+如上情况`src`路径将会先被匹配。
+
+### resolve.mainFields
+背景：从npm包中引入入口模块文件时，可以根据不同的字段引入不同环境的版本。如：
+```js
+{
+  ...
+  main: 'build/d3.Node.js',
+  browser: 'build/d3.js',
+  module: 'index',
+  ...
+}
+```
+webpack会根据此字段，默认引用npm包中的某个字段对应的入口文件。
+其默认值会根据webpack中`target`字段的值的变化而有所不同。
+当`target`为`webworker`、`web`或者未指定时，默认值为：
+```mainFields: ["browser", "module", "main"]```
+当`target`为`node`时，默认值为:
+```mainFields: ["module", "main"]```
+
+### resolve.mainFiles
+入口文件的文件名
+
+### resolve.aliasFields
+指定读取某个字段为alias的配置，[点击查看规范](https://github.com/defunctzombie/package-browser-field-spec)
+
+### resolve.plugins
+解析时的插件列表。参数为数组。
+
+### resolve.unsafeCache
+- 传入布尔值:
+是否开启模块的缓存。主动缓存可以带来构建性能的提升，但是在极少数情况下可能会失败。
+- 传入正则表达式:
+匹配缓存模块的路径，表示仅缓存部分模块。
+
+### resolve.alias
+设置引入资源时，路径的别名。
+- 经典用法:
+```js
+alias: {
+  Utilities: path.resolve(__dirname, 'src/utilities/'),
+  Templates: path.resolve(__dirname, 'src/templates/')
+}
+```
+- 在对象的键末尾加上$，开启精准匹配:
+开启精准匹配的意思是指，在键设置为`foo$: './src/foo'`的情况下，当`import 'foo'`意味着`import './src/foo/index.js'`，而当`import 'foo/file.js'`则不受影响，即`import './node_modules/foo/file.js'`
+**注意**：这与前者的区别在于，前者还会影响如`import 'foo/file.js'`这种模式，一旦写死alias就会报`error`。
+- onlyModule:
+```js
+alias: [
+  {
+    name: "module",
+    // the old request
+    alias: "new-module",
+    // the new request
+    onlyModule: true
+    // if true only "module" is aliased
+    // if false "module/inner/path" is also aliased
+  }
+],
+```
+
+### resolve.extensions
+匹配的文件名后缀。**注意**，自定义这个选项将会覆盖默认的文件名后缀选项。
+
+### resolve.moduleExtensions
+模块名后缀匹配选项
+
+### resolve.enforceExtension
+是否强制要求文件名后缀
+
+### resolve.enforceModuleExtension
+是否强制要求模块名后缀
+
+### resolve.resolveLoader
+loader的resolve选项
+
+### resolve.resolveLoader.moduleExtensions
+loader后缀解析，避免所有loader都要手写后缀。
+但是官方强烈建议loader都影响手写后缀保证清晰度。
