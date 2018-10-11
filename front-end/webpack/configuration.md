@@ -427,3 +427,135 @@ loader的resolve选项
 ### resolve.resolveLoader.moduleExtensions
 loader后缀解析，避免所有loader都要手写后缀。
 但是官方强烈建议loader都影响手写后缀保证清晰度。
+
+## performance
+
+### performance.hints
+可能值: `false`、`'wraning'`或`'error'`
+分别为: 关闭提示、警告、报错
+
+### performance.maxEntrypointSize
+最大入口模块的大小，默认值为: `250000`(bytes)
+
+### performance.maxAssetSize
+最大单个资源文件的大小，默认值为: `250000`(bytes)
+
+### performance.assetFilter
+用于过滤提示性能的文件的函数，默认值为:
+```js
+function(assetFilename) {
+    return !(/\.map$/.test(assetFilename))
+};
+```
+
+## devtool
+设置采用什么质量的source map。source map重要的地方在于mapping属性，指引了转换前后代码的位置和变量名，可以还原代码编译之前的样子。
+[原理](http://www.ruanyifeng.com/blog/2013/01/javascript_source_map.html)
+[属性值](https://www.webpackjs.com/configuration/devtool/)
+
+## context
+指示当前打包资源根路径。
+
+## target
+指示webpack该资源将会打包到哪个环境，会开启部分插件做优化。
+常见如`node`、`web`、`webworker`。
+若常见的环境不满足需求，可以传入函数。该函数将会被传入compiler对象，可用于启用部分自定义的插件。
+```js
+const webpack = require('webpack');
+
+const options = {
+  target: (compiler) => {
+    compiler.apply(
+      new webpack.JsonpTemplatePlugin(options.output),
+      new webpack.LoaderTargetPlugin('web')
+    );
+  }
+};
+```
+
+## externals
+指示webpack，哪些模块应该属于外部扩展。个人认为假如大模块被归为外部扩展，能优化构建性能。
+1. 外部的library可以表现为四种形式:
+  - root: 挂载全局
+  - commonjs: commonjs规范，以exports上的属性访问
+  - commonjs2: commonjs2规范，可以以module.exports上的属性访问
+  - amd: AMD规范
+  
+2. 参数有如下三种形式:
+  - string: 
+  ```js
+  module.exports = {
+    externals: {
+      'jquery': 'jQuery',
+      'angular': 'this angular', // this["angular"]      
+    },
+  }
+  ```
+
+  - regexp:
+  正则匹配请求
+  ```js
+  module.exports = {
+    //...
+    externals: /^(jquery|\$)$/i
+  };  
+  ```
+
+  - array: 
+  表示substract获取方式为`'./math'`与`'substract'`转换为父子结构。前者为父模块。
+  ```js
+  module.exports = {
+    //...
+    externals: {
+      subtract: ['./math', 'subtract']
+    }
+  };
+  ```
+
+  - object:
+  ```js
+  module.exports = {
+    //...
+    // 表示排除`import react from 'react'`中的react模块，替换为在全局检索的react变量
+    externals : {
+      react: 'react'
+    },
+
+    // 或者
+    // 表示lodash库的多种引入方法
+    externals : {
+      lodash : {
+        commonjs: 'lodash',
+        amd: 'lodash',
+        root: '_' // 指向全局变量
+      }
+    },
+
+    // 或者
+    // subtract 可以通过全局 math 对象下的属性 subtract 访问（例如 window['math']['subtract']）。
+    externals : {
+      subtract : {
+        root: ['math', 'subtract']
+      }
+    }
+  };
+  ```
+  
+  - function: 
+  使用函数可以定制化模块的`request`
+  ```js
+  module.exports = {
+    //...
+    externals: [
+      function(context, request, callback) {
+        if (/^yourregex$/.test(request)){
+          return callback(null, 'commonjs ' + request);
+        }
+        callback();
+      }
+    ]
+  };
+  ```
+
+## stats
+控制显示的统计信息
