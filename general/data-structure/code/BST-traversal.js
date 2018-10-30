@@ -20,17 +20,17 @@ const preorderTraversal = function (root) {
 /**
  * 中缀遍历
  */
-const inorderTraversal = function (root) {
+const inorderTraversal = function (root, cb) {
   let traverse = []
 
   if (root.left) {
-    traverse = traverse.concat(preorderTraversal(root.left))
+    traverse = traverse.concat(inorderTraversal(root.left, cb))
   }
 
-  traverse.push(root.value)
+  traverse.push(typeof cb == `function` ? cb(root) : root.value)
 
   if (root.right) {
-    traverse = traverse.concat(preorderTraversal(root.right))
+    traverse = traverse.concat(inorderTraversal(root.right, cb))
   }
 
   return traverse
@@ -43,11 +43,11 @@ const postorderTraversal = function (root) {
   let traverse = []
 
   if (root.left) {
-    traverse = traverse.concat(preorderTraversal(root.left))
+    traverse = traverse.concat(postorderTraversal(root.left))
   }
 
   if (root.right) {
-    traverse = traverse.concat(preorderTraversal(root.right))
+    traverse = traverse.concat(postorderTraversal(root.right))
   }
 
   traverse.push(root.value)
