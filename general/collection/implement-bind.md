@@ -9,15 +9,22 @@
 ## 具体实现
 ```js
 Function.prototype.bind2 = function () {
+    // 调用者非函数则报错
+    if (typeof this !== "function") {
+      throw new Error("Function.prototype.bind - what is trying to be bound is not callable");
+    }  
     var context = arguments[0];
     var self = this;
     var args = Array.prototype.slice.call(arguments, 1);
+    var proxyFunc = function() {};
     function bindFunc() {
       var restArgs = Array.prototype.slice.call(arguments, 0);
       return self.apply(this instanceof bindFunc ? this : context, args.concat(restArgs));
     };
     // 注意原型链修改为调用者的原型链
-    bindFunc.prototype = this.prototype;
+    proxyFunc.prototype = this.prototype;
+    // 增加一层代理。假如直接修改bindFunc的原型链不会影响原调用者的原型链
+    bindFunc.prototype = new proxyFunc();
     return bindFunc;
 }
 
